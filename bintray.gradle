@@ -1,0 +1,90 @@
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
+
+def projectName = "timePlugin"
+def mavenDesc = 'your desc'
+def baseUrl = 'https://github.com/xiaoxinxing12/ChzzSmall-Android'
+def siteUrl = baseUrl
+def gitUrl = "${baseUrl}/ChzzUI-Android.git"
+
+def licenseIds = ['Apache-2.0']
+def licenseNames = ['The Apache Software License, Version 2.0']
+def licenseUrls = ['http://www.apache.org/licenses/LICENSE-2.0.txt']
+def inception = '2016'
+
+def username = 'xiaoxinxing12'
+
+install {
+    repositories {
+        mavenInstaller {
+            pom.project {
+                // Description
+                name projectName
+                description mavenDesc
+                url siteUrl
+
+                // Archive
+                groupId project.group
+                artifactId archivesBaseName
+                version project.version
+
+                // License
+                inceptionYear inception
+                licenses {
+                    licenseNames.eachWithIndex { ln, li ->
+                        license {
+                            name ln
+                            url licenseUrls[li]
+                        }
+                    }
+                }
+                developers {
+                    developer {
+                        name username
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allGroovy
+    classifier = 'sources'
+}
+
+
+task javadocJar(type: Jar, dependsOn: groovydoc) {
+    from groovydoc.destinationDir
+    classifier = 'javadoc'
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+
+bintray {
+    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') :
+            System.getenv('BINTRAY_USER')
+    key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') :
+            System.getenv('BINTRAY_API_KEY')
+    configurations = ['archives']
+    pkg {
+        repo = 'chzz'
+        name = "chzz-Small"
+        desc = mavenDesc
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        labels = ['gradle', 'plugin', 'time']
+        licenses = licenseIds
+        publish = true
+
+    }
+}

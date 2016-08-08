@@ -1,0 +1,19 @@
+apply plugin: 'groovy'
+apply plugin: 'maven'
+dependencies {
+    compile gradleApi()
+    compile localGroovy()
+}
+version = '1.0.0'
+group='org.chzz.small'
+repositories {
+    mavenCentral()
+}
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: uri('../chzz'))
+        }
+    }
+}
+apply from: '../bintray.gradle'
