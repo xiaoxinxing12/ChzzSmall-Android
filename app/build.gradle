@@ -24,3 +24,16 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.4.0'
 }
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            url uri('../chzz')
+        }
+    }
+    dependencies {
+        //classpath 'cn.edu.zafu.gradle.plugin:time:1.0.0'
+        classpath 'org.chzz.small:samll:1.0.0'
+    }
+}
+apply plugin: 'plugin.time'
